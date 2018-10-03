@@ -59,6 +59,20 @@ int ap_opDown[]  = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 };
 int *ap_ops[] = { ap_opLeft, ap_opRight, ap_opUp, ap_opDown };
 
 
+inline node * copy_node(node* old){
+    node* new_node = malloc(sizeof(node));
+    memcpy(new_node, old, sizeof(node));
+    return new_node;
+}
+
+inline int x(int i){
+    return i%4;
+}
+
+inline int y(int i){
+    return i/4;
+}
+
 /* print state */
 void print_state( int* s )
 {
@@ -86,12 +100,19 @@ void printf_comma (long unsigned int n) {
 int manhattan( int* state )
 {
 	int sum = 0;
-
+    int i = 0;
 	/**
 	 * FILL WITH YOUR CODE
 	 */
 
-	
+    for(; i<16; i++){
+        int posx = x(i);
+        int posy = y(i);
+        int posx2 = x(state[i]);
+        int posy2 = y(state[i]);
+    
+        sum += abs(posx - posx2) + abs(posy - posy2);
+    }
 	return( sum );
 }
 
@@ -128,8 +149,27 @@ node* ida( node* node, int threshold, int* newThreshold )
 	 *
 	 * Algorithm in Figure 2 of handout
 	 */
-
-	
+    int i;
+    for( i=0; i<4; i++ ){
+        if( !applicable(i) ) 
+            continue;
+        struct node* new_node = copy_node(node);
+        apply(new_node, i);
+        new_node->g++;
+        new_node->f += manhattan(new_node->state);
+        if(new_node->f > threshold){
+            if(new_node->f < *newThreshold)
+                *newThreshold = new_node->f;
+            free(new_node);
+        }else{
+            if(manhattan(new_node->state) == 0)
+                return new_node;
+            struct node* r = ida(new_node, threshold, newThreshold);
+            free(new_node);
+            if(r)
+                return r;
+        }
+    }
 	return( NULL );
 }
 
@@ -155,7 +195,13 @@ int IDA_control_loop(  ){
 	 *
 	 * Algorithm in Figure 1 of handout
 	 */
-
+    while(!r){
+        int newThreshold = INT_MAX;
+        initial_node.g = 0;
+        r = ida(&initial_node, threshold, &newThreshold);
+        if(!r)
+            threshold = newThreshold;
+    } 
 	if(r)
 		return r->g;
 	else
