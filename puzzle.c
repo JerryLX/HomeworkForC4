@@ -19,6 +19,7 @@ typedef struct node{
 	int state[16];
 	int g;
 	int f;
+    int blank_pos;
 } node;
 
 /**
@@ -28,7 +29,7 @@ typedef struct node{
 // used to track the position of the blank in a state,
 // so it doesn't have to be searched every time we check if an operator is applicable
 // When we apply an operator, blank_pos is updated
-int blank_pos;
+//int blank_pos;
 
 // Initial node of the problem
 node initial_node;
@@ -60,6 +61,7 @@ int *ap_ops[] = { ap_opLeft, ap_opRight, ap_opUp, ap_opDown };
 
 
 inline node * copy_node(node* old){
+    generated++;
     node* new_node = malloc(sizeof(node));
     memcpy(new_node, old, sizeof(node));
     return new_node;
@@ -106,6 +108,8 @@ int manhattan( int* state )
 	 */
 
     for(; i<16; i++){
+        if(!state[i])
+            continue;
         int posx = x(i);
         int posy = y(i);
         int posx2 = x(state[i]);
@@ -116,11 +120,47 @@ int manhattan( int* state )
 	return( sum );
 }
 
+int manhattan2( int* state )
+{
+	int sum = 0;
+    int i = 0;
+	/**
+	 * FILL WITH YOUR CODE
+	 */
+
+    int one_in_first_col = 0;
+    int four_in_first_row = 0;
+
+    for(; i<16; i++){
+        if(!state[i])
+            continue;
+        int posx = x(i);
+        int posy = y(i);
+        int posx2 = x(state[i]);
+        int posy2 = y(state[i]);
+    
+        if(state[i] == 1){
+            if(posx == 0)
+                one_in_first_col = 1;
+        }
+        if(state[i] == 4){
+            if(posy == 0)
+                four_in_first_row = 1;
+        }
+
+        sum += abs(posx - posx2) + abs(posy - posy2);
+    }
+
+    if(!one_in_first_col && !four_in_first_row){
+        sum+=2;
+    }
+	return( sum );
+}
 
 /* return 1 if op is applicable in state, otherwise return 0 */
-int applicable( int op )
+int applicable( int op, node* n)
 {
-       	return( ap_ops[op][blank_pos] );
+       	return( ap_ops[op][n->blank_pos] );
 }
 
 
@@ -128,7 +168,7 @@ int applicable( int op )
 void apply( node* n, int op )
 {
 	int t;
-
+    int blank_pos = n->blank_pos;
 	//find tile that has to be moved given the op and blank_pos
 	t = blank_pos + (op == 0 ? -1 : (op == 1 ? 1 : (op == 2 ? -4 : 4)));
 
@@ -137,7 +177,7 @@ void apply( node* n, int op )
 	n->state[t] = 0;
 	
 	//update blank pos
-	blank_pos = t;
+	n->blank_pos = t;
 }
 
 /* Recursive IDA */
@@ -149,14 +189,16 @@ node* ida( node* node, int threshold, int* newThreshold )
 	 *
 	 * Algorithm in Figure 2 of handout
 	 */
+    expanded++;
     int i;
     for( i=0; i<4; i++ ){
-        if( !applicable(i) ) 
+        if( !applicable(i, node) ) 
             continue;
         struct node* new_node = copy_node(node);
         apply(new_node, i);
         new_node->g++;
-        new_node->f += manhattan(new_node->state);
+        new_node->f = new_node->g + manhattan(new_node->state);
+        
         if(new_node->f > threshold){
             if(new_node->f < *newThreshold)
                 *newThreshold = new_node->f;
@@ -187,21 +229,21 @@ int IDA_control_loop(  ){
 	/* compute initial threshold B */
 	initial_node.f = threshold = manhattan( initial_node.state );
 
-	printf( "Initial Estimate = %d\nThreshold = ", threshold );
+	printf( "Initial Estimate = %d\nThreshold =", threshold );
 	
-
 	/**
 	 * FILL WITH YOUR CODE
 	 *
 	 * Algorithm in Figure 1 of handout
 	 */
     while(!r){
+        printf(" %d", threshold);
         int newThreshold = INT_MAX;
         initial_node.g = 0;
         r = ida(&initial_node, threshold, &newThreshold);
         if(!r)
             threshold = newThreshold;
-    } 
+    }
 	if(r)
 		return r->g;
 	else
@@ -242,7 +284,7 @@ int main( int argc, char **argv )
 		for( i = 0; tile != NULL; ++i )
 			{
 				initial_node.state[i] = atoi( tile );
-				blank_pos = (initial_node.state[i] == 0 ? i : blank_pos);
+				initial_node.blank_pos = (initial_node.state[i] == 0 ? i : initial_node.blank_pos);
 				tile = strtok( NULL, " " );
 			}		
 	}
