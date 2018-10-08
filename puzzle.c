@@ -150,8 +150,10 @@ int manhattan2( int* state )
 	 * FILL WITH YOUR CODE
 	 */
 
-//    int one_in_first_col = 0;
-//    int four_in_first_row = 0;
+    int one_in_first_row = 0;
+    int one_in_first_col = 0;
+    int four_in_first_row = 0;
+    int four_in_first_col = 0;
 
     int row[4][4];
     int col[4][4];
@@ -177,26 +179,35 @@ int manhattan2( int* state )
             row[posy][count_row[posy]] = state[i];
             count_row[posy]++;
         }
-    /*
+    
         if(state[i] == 1){
             if(posx == 0)
                 one_in_first_col = 1;
+            if(posy == 0)
+                one_in_first_row = 1;
+
         }
         if(state[i] == 4){
+            if(posx == 0)
+                four_in_first_col = 1;
             if(posy == 0)
                 four_in_first_row = 1;
         }
-*/
+
         sum += abs(posx - posx2) + abs(posy - posy2);
     }
-    //if(one_in_first_col==0 && four_in_first_row==0){
-    //    sum+=2;
-    //}
+    if(!one_in_first_col && !four_in_first_row &&!one_in_first_row && !four_in_first_col){
+        sum+=2;
+    }
     for(int i=0;i<4;i++){
-        int lis = LIS(row[i],count_row[i]);
-        sum += 2*(count_row[i]-lis);
-        lis = LIS(col[i],count_col[i]);
-        sum += 2*(count_col[i]-lis);
+        if(count_row[i]){
+            int lis = LIS(row[i],count_row[i]);
+            sum += 2*(count_row[i]-lis);
+        }
+        if(count_col[i]){
+            int lis = LIS(col[i],count_col[i]);
+            sum += 2*(count_col[i]-lis);
+        }
     }
 	return( sum );
 }
