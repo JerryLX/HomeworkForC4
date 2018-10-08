@@ -128,12 +128,12 @@ int manhattan( int* state )
 }
 
 int LIS(int *vec, int count){
-    int dp[4], i;
+    int dp[4], i, j;
     dp[0] = 1;
 
     for(i=1;i<count;i++){
         dp[i] = 0;
-        for(int j=0;j<i;j++){
+        for(j=0;j<i;j++){
             if(vec[i]>vec[j]){
                 dp[i] = dp[j]+1>dp[i]?dp[j]+1:dp[i];
             }
