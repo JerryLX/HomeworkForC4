@@ -64,3 +64,6 @@
 2.puzzle
 	Soulution = 56, Generated = 625941920, Expanded = 210998637, Time = 208.220001, Expanded/Second = 1013344.750000
 
+1.puzzle
+	Soulution = 55, Generated = 692958294, Expanded = 240375478, Time = 233.496002, Expanded/Second = 1029462.875000
+
