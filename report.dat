@@ -10,3 +10,51 @@
 3.puzzle
 	Soulution = 1, Generated = 1, Expanded = 1, Time = 0.000008, Expanded/Second = 124999.960938
 
+3.puzzle
+	Soulution = 1, Generated = 1, Expanded = 1, Time = 0.000000, Expanded/Second = inf
+
+1.puzzle
+	Soulution = 55, Generated = 4182661408, Expanded = 1448914262, Time = 742.000000, Expanded/Second = 1952714.750000
+
+3.puzzle
+	Soulution = 1, Generated = 1, Expanded = 1, Time = 0.000000, Expanded/Second = inf
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000000, Expanded/Second = nan
+
+1.puzzle
+	Soulution = 45, Generated = 26117, Expanded = 8430, Time = 0.008000, Expanded/Second = 1053750.000000
+
+2.puzzle
+	Soulution = 36, Generated = 7514969, Expanded = 2457044, Time = 2.108000, Expanded/Second = 1165580.625000
+

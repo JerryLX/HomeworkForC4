@@ -8,6 +8,13 @@
 #include <sys/resource.h>
 #include <sys/time.h>
 
+#define OPT
+
+#ifdef OPT
+#define H manhattan2
+#else
+#define H manhattan
+#endif
 
 /** 
  * READ THIS DESCRIPTION
@@ -120,6 +127,21 @@ int manhattan( int* state )
 	return( sum );
 }
 
+int LIS(int *vec, int count){
+    int dp[4];
+    dp[0] = 1;
+
+    for(int i=1;i<count;i++){
+        dp[i] = 0;
+        for(int j=0;j<i;j++){
+            if(vec[i]>vec[j]){
+                dp[i] = dp[j]+1>dp[i]?dp[j]+1:dp[i];
+            }
+        }
+    }
+    return dp[count-1];
+}
+
 int manhattan2( int* state )
 {
 	int sum = 0;
@@ -128,8 +150,16 @@ int manhattan2( int* state )
 	 * FILL WITH YOUR CODE
 	 */
 
-    int one_in_first_col = 0;
-    int four_in_first_row = 0;
+//    int one_in_first_col = 0;
+//    int four_in_first_row = 0;
+
+    int row[4][4];
+    int col[4][4];
+    int count_row[4];
+    int count_col[4];
+    for(int i=0;i<4;i++){
+        count_row[i] = count_col[i] = 0;
+    }
 
     for(; i<16; i++){
         if(!state[i])
@@ -138,7 +168,16 @@ int manhattan2( int* state )
         int posy = y(i);
         int posx2 = x(state[i]);
         int posy2 = y(state[i]);
-    
+
+        if(posx == posx2){
+            col[posx][count_col[posx]] = state[i];
+            count_col[posx]++;
+        }
+        if(posy == posy2){
+            row[posy][count_row[posy]] = state[i];
+            count_row[posy]++;
+        }
+    /*
         if(state[i] == 1){
             if(posx == 0)
                 one_in_first_col = 1;
@@ -147,12 +186,17 @@ int manhattan2( int* state )
             if(posy == 0)
                 four_in_first_row = 1;
         }
-
+*/
         sum += abs(posx - posx2) + abs(posy - posy2);
     }
-
-    if(!one_in_first_col && !four_in_first_row){
-        sum+=2;
+    //if(one_in_first_col==0 && four_in_first_row==0){
+    //    sum+=2;
+    //}
+    for(int i=0;i<4;i++){
+        int lis = LIS(row[i],count_row[i]);
+        sum += 2*(count_row[i]-lis);
+        lis = LIS(col[i],count_col[i]);
+        sum += 2*(count_col[i]-lis);
     }
 	return( sum );
 }
@@ -197,14 +241,14 @@ node* ida( node* node, int threshold, int* newThreshold )
         struct node* new_node = copy_node(node);
         apply(new_node, i);
         new_node->g++;
-        new_node->f = new_node->g + manhattan(new_node->state);
+        new_node->f = new_node->g + H(new_node->state);
         
         if(new_node->f > threshold){
             if(new_node->f < *newThreshold)
                 *newThreshold = new_node->f;
             free(new_node);
         }else{
-            if(manhattan(new_node->state) == 0)
+            if(H(new_node->state) == 0)
                 return new_node;
             struct node* r = ida(new_node, threshold, newThreshold);
             free(new_node);
@@ -227,10 +271,8 @@ int IDA_control_loop(  ){
 	expanded = 0;
 
 	/* compute initial threshold B */
-	initial_node.f = threshold = manhattan( initial_node.state );
-
+	initial_node.f = threshold = H( initial_node.state );
 	printf( "Initial Estimate = %d\nThreshold =", threshold );
-	
 	/**
 	 * FILL WITH YOUR CODE
 	 *

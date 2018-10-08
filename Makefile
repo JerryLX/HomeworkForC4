@@ -5,7 +5,7 @@ CPPFLAGS=-Wall  -Werror  -O3
 #
 #CPPFLAGS=-g
 
-SRC=puzzle.o  
+SRC=puzzle.o
 TARGET=15puzzle
 
 all: $(SRC)
