@@ -159,11 +159,11 @@ int manhattan2( int* state )
     int col[4][4];
     int count_row[4];
     int count_col[4];
-    for(int i=0;i<4;i++){
+    for(i=0;i<4;i++){
         count_row[i] = count_col[i] = 0;
     }
 
-    for(; i<16; i++){
+    for(i=0; i<16; i++){
         if(!state[i])
             continue;
         int posx = x(i);
@@ -199,7 +199,7 @@ int manhattan2( int* state )
     if(!one_in_first_col && !four_in_first_row &&!one_in_first_row && !four_in_first_col){
         sum+=2;
     }
-    for(int i=0;i<4;i++){
+    for(i=0;i<4;i++){
         if(count_row[i]){
             int lis = LIS(row[i],count_row[i]);
             sum += 2*(count_row[i]-lis);
